@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": true
+  },
+  "include": [
+    "../**/*.ts"
+  ],
+  "exclude": [
+    "../**/node_modules",
+    "../**/dist",
+    "../**/.next",
+    "../deps/data/stub"
+  ]
+}

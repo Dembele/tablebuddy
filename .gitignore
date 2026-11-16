@@ -1,0 +1,26 @@
+# Dependencies and build output (rebuilt by npm i / next)
+node_modules/
+.next/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets: env files never go into the repo (AGENTS.md)
+.env*
+shared.env
+
+# User uploads and campaign media (runtime data, not code)
+apps/backend/public/campaigns/
+apps/backend/public/uploads/
+apps/backend/public/monsters/
+packages/data/*/
+!packages/data/stub/
+packages/data/books.ts
+
+# IDE and OS clutter
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+

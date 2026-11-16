@@ -1,0 +1,514 @@
+//Game room (docs/design-guide.md §7): the table. Bar on top, side panel, the map as the stage with floating panels over it.
+//Also the chat / roll / request cards, which the room dock on site pages shares.
+
+.room {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  background: var(--tb-surface-stage);
+  font-size: .875rem;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--tb-border);
+    background: var(--tb-surface-panel);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  &__title {
+    max-width: 26ch;
+    overflow: hidden;
+    font-family: var(--tb-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__spacer { flex: 1; }
+
+  &__presence {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    .tb-avatar { --size: 24px; }
+  }
+
+  &__body {
+    position: relative;
+    display: flex;
+    min-height: 0;
+  }
+
+  &__side {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    width: var(--tb-side-width);
+    min-height: 0;
+    border-right: 1px solid var(--tb-border);
+    background: var(--tb-surface-panel);
+  }
+
+  &__tabs { padding: 8px 8px 0; }
+
+  &__panel {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &__stage {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 8px;
+    padding: 24px;
+    color: var(--tb-ink-faint);
+    text-align: center;
+  }
+
+  &__selection {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    z-index: var(--tb-z-float);
+    width: min(400px, calc(100% - 64px));
+    padding: 8px 10px;
+  }
+
+  &__zoom {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    z-index: var(--tb-z-float);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__toasts {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: var(--tb-z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: min(420px, calc(100% - 16px));
+    transform: translateX(-50%);
+  }
+
+  &__drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: var(--tb-z-drawer);
+    display: flex;
+    flex-direction: column;
+    width: min(800px, 96vw);                                                                                            // ≥ 768 inside: the framed page keeps its md layout
+    height: 100%;
+    border-left: 1px solid var(--tb-border-strong);
+    background: var(--tb-surface-panel);
+    box-shadow: var(--tb-shadow-2);
+
+    &.is-wide { width: min(1200px, 96vw); }
+
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: 0;
+      background: var(--tb-surface-page);
+    }
+  }
+
+  &__drawer-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--tb-border);
+  }
+}
+
+// phones: the side panel lies over the map instead of squeezing it
+@media (max-width: 767.98px) {
+  .room__side {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: min(92vw, var(--tb-side-width));
+    box-shadow: var(--tb-shadow-2);
+  }
+
+  .room__title { display: none; }                                                                                       // the back button's tooltip still names the campaign
+  .room__selection { width: calc(100% - 64px); }
+  .tracker { max-height: 45%; }
+}
+
+// ── chat, rolls, requests ───────────────────────────────────────────────────────────────────────────────────────────
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__pending {
+    max-height: 48%;
+    padding: 8px;
+    border-bottom: 1px solid var(--tb-accent-line);
+    background: var(--tb-accent-soft);
+    overflow: auto;
+  }
+
+  &__log {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+    min-height: 0;
+    padding: 8px 10px;
+    overflow: auto;
+  }
+
+  &__form {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border-top: 1px solid var(--tb-border);
+  }
+}
+
+.chat-msg {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+
+  &__who {
+    margin-right: 6px;
+    font-weight: 700;
+    &.is-dm { color: var(--tb-role-dm); }
+  }
+
+  &__time {
+    margin-left: 6px;
+    color: var(--tb-ink-faint);
+    font-size: .6875rem;
+  }
+}
+
+// a rolled result in the log; --request while it waits for the DM
+.roll-card {
+  padding: 6px 8px;
+  border: 1px solid var(--tb-border);
+  border-left: 3px solid var(--tb-border-strong);
+  border-radius: var(--tb-radius);
+  background: var(--tb-surface-sunken);
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 6px;
+  }
+
+  &__who { color: var(--tb-ink-muted); }
+  &__title { font-weight: 700; }
+  &__cost { color: var(--tb-ink-faint); font-size: .75rem; }
+
+  &__roll {
+    display: grid;
+    grid-template-columns: 3.4em auto 1fr;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  &__total {
+    min-width: 1.4em;
+    font-family: var(--tb-font-heading);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: right;
+  }
+
+  &__terms {
+    color: var(--tb-ink-muted);
+    font-family: var(--tb-font-mono);
+    font-size: .75rem;
+  }
+
+  &__note { margin-top: 2px; font-size: .8125rem; }
+  &__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+
+  &.is-failed {
+    border-left-color: var(--tb-warning);
+    .roll-card__total { color: var(--tb-ink-faint); text-decoration: line-through; }
+  }
+
+  &--request {
+    border-left-color: var(--tb-accent);
+    background: var(--tb-surface-panel);
+    & + & { margin-top: 6px; }
+  }
+
+  &__verdict {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-top: 8px;
+  }
+}
+
+// ── initiative ──────────────────────────────────────────────────────────────────────────────────────────────────────
+
+.tracker {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: var(--tb-z-float);
+  display: flex;
+  flex-direction: column;
+  width: min(280px, calc(100% - 16px));
+  max-height: calc(100% - 130px);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 6px 6px 10px;
+    border-bottom: 1px solid var(--tb-border);
+  }
+
+  &__round {
+    flex: 1;
+    font-family: var(--tb-font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 4px;
+    overflow: auto;
+    list-style: none;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 38px 26px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px;
+    border: 1px solid transparent;
+    border-radius: var(--tb-radius);
+
+    &.is-current {
+      border-color: var(--tb-turn);
+      background: rgba(255, 209, 102, .12);
+    }
+
+    &.is-hidden { border-style: dashed; border-color: var(--tb-border-strong); opacity: .7; }
+    .tb-avatar { --size: 26px; }
+  }
+
+  &__name {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    overflow: hidden;
+    font-weight: 600;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &:disabled { cursor: default; }
+  }
+
+  &__init {
+    width: 100%;
+    font-family: var(--tb-font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  input.tracker__init {
+    padding: 1px 2px;
+    border: 1px solid var(--tb-border);
+    border-radius: var(--tb-radius-sm);
+    background: var(--tb-surface-sunken);
+    color: var(--tb-ink);
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button { appearance: none; }
+    &:focus { border-color: var(--tb-accent); outline: none; }
+  }
+
+  &__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+    border-top: 1px solid var(--tb-border);
+  }
+}
+
+// ── action panel ────────────────────────────────────────────────────────────────────────────────────────────────────
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 10px;
+  overflow: auto;
+
+  &__hero {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .tb-avatar { --size: 44px; }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+
+    &--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  &__item {
+    padding: 6px 0;
+    border-top: 1px solid var(--tb-border);
+    &:first-child { border-top: 0; }
+  }
+
+  &__summary { color: var(--tb-ink-muted); font-size: .75rem; }
+}
+
+// ── map ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+.map-token {
+  position: absolute;
+  border-radius: 50%;
+  outline: 2px solid rgba(0, 0, 0, .6);
+  outline-offset: 1px;
+  overflow: hidden;
+
+  &.is-concealed { opacity: .6; }
+  &.is-selected { outline: 4px solid #fff; }
+}
+
+// whose turn it is: a ring outside the token (the token clips its own content); --ring scales with the token, in map pixels
+.map-turn {
+  --ring: 6px;
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 0 var(--ring) var(--tb-turn), 0 0 calc(var(--ring) * 4) calc(var(--ring) * 2) rgba(255, 209, 102, .7);
+  pointer-events: none;
+  animation: tb-turn-glow 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes tb-turn-glow {
+  from { box-shadow: 0 0 0 var(--ring) var(--tb-turn), 0 0 calc(var(--ring) * 2) var(--ring) rgba(255, 209, 102, .45); }
+  to { box-shadow: 0 0 0 var(--ring) var(--tb-turn), 0 0 calc(var(--ring) * 5) calc(var(--ring) * 2.5) rgba(255, 209, 102, .8); }
+}
+
+// "look here": two rings spreading from the point, the pinger's name under it
+.map-ping {
+  --ping-color: var(--tb-role-player);
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+
+  &.is-dm { --ping-color: var(--tb-role-dm); }
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--ping-size) / -2);
+    left: calc(var(--ping-size) / -2);
+    width: var(--ping-size);
+    height: var(--ping-size);
+    border: calc(var(--ping-size) * .05) solid var(--ping-color);
+    border-radius: 50%;
+    animation: tb-ping 1.25s var(--tb-ease) 2 both;
+  }
+
+  &::after { animation-delay: .3s; }
+
+  &__name {
+    position: absolute;
+    top: calc(var(--ping-size) * .22);
+    left: 0;
+    padding: 0 .4em;
+    border-radius: var(--tb-radius-sm);
+    background: var(--ping-color);
+    color: #fff;
+    font-size: calc(var(--ping-size) * .13);
+    font-weight: 700;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes tb-ping {
+  from { opacity: 1; transform: scale(.08); }
+  to { opacity: 0; transform: scale(1); }
+}
+
+// room dock on site pages (sheet, campaign): the same queue and log in a corner
+.room-dock {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: var(--tb-z-dock);
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 32px));
+  font-size: .875rem;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 50vh;
+    padding: 8px;
+    border-top: 1px solid var(--tb-border);
+    overflow: auto;
+  }
+
+  &__foot {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border-top: 1px solid var(--tb-border);
+  }
+}

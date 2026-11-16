@@ -1,0 +1,20 @@
+{
+  "display": "Backend",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": ".",
+    "paths": { "@backend/*": ["./*"] },
+    "types": ["node", "jest"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["**/node_modules", "**/dist", "**/.next", "__tests__", "jest.config.ts", "deps/data/stub"]
+}

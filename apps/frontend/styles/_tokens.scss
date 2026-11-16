@@ -1,0 +1,91 @@
+//Design tokens (docs/design-guide.md §2): every colour, radius, shadow and layer the UI may use, as CSS custom properties.
+//Components read these — never a raw hex. Sass colours below feed bootstrap's own variables in globals.scss.
+
+$tb-oak-950: #0e0a06;
+$tb-oak-900: #15100a;
+$tb-oak-800: #1c140c;
+$tb-oak-700: #261b11;
+$tb-oak-600: #33251a;
+$tb-oak-500: #4a3828;
+$tb-ink: #ece5cf;
+$tb-ink-muted: #a89f86;
+$tb-ink-faint: #7d745f;
+$tb-hearth: #f08022;
+$tb-hearth-bright: #ffa257;
+
+:root {
+  // surfaces, darkest to lightest: stage (map backdrop) < page < panel < raised (inputs, hover) < borders
+  --tb-surface-stage: #{$tb-oak-950};
+  --tb-surface-page: #{$tb-oak-900};
+  --tb-surface-panel: #{$tb-oak-800};
+  --tb-surface-raised: #{$tb-oak-700};
+  --tb-surface-sunken: #110c07;
+  --tb-surface-float: #{rgba($tb-oak-800, .94)};
+  --tb-border: #{$tb-oak-600};
+  --tb-border-strong: #{$tb-oak-500};
+
+  // ink (parchment): body, secondary, hints
+  --tb-ink: #{$tb-ink};
+  --tb-ink-muted: #{$tb-ink-muted};
+  --tb-ink-faint: #{$tb-ink-faint};
+  --tb-ink-on-accent: #1a0f05;
+
+  // accent (hearth glow): the one colour that means "press me" / "current"
+  --tb-accent: #{$tb-hearth};
+  --tb-accent-bright: #{$tb-hearth-bright};
+  --tb-accent-soft: #{rgba($tb-hearth, .14)};
+  --tb-accent-line: #{rgba($tb-hearth, .45)};
+
+  // meaning: readable on dark as text (ink) and as a tinted fill (soft)
+  --tb-success: #7fb069;
+  --tb-success-soft: #{rgba(#7fb069, .16)};
+  --tb-danger: #e0665c;
+  --tb-danger-soft: #{rgba(#e0665c, .16)};
+  --tb-warning: #e5a04a;
+  --tb-warning-soft: #{rgba(#e5a04a, .16)};
+  --tb-info: #86a9cf;
+  --tb-info-soft: #{rgba(#86a9cf, .16)};
+
+  // table roles and game state on the map
+  --tb-role-dm: #e0564c;
+  --tb-role-player: #5b9bd5;
+  --tb-hp-good: #7fb069;
+  --tb-hp-hurt: #e5a04a;
+  --tb-hp-critical: #e0564c;
+  --tb-hp-temp: #22d3ee;
+  --tb-condition: #fbbf24;
+  --tb-condition-severe: #f87171;
+  --tb-turn: #ffd166;
+
+  // shape
+  --tb-radius-sm: 4px;
+  --tb-radius: 8px;
+  --tb-radius-lg: 12px;
+  --tb-radius-pill: 999px;
+
+  // elevation: 1 = raised on the page, 2 = floating over the map / other content
+  --tb-shadow-1: 0 1px 2px rgba(0, 0, 0, .45);
+  --tb-shadow-2: 0 6px 24px rgba(0, 0, 0, .55), 0 1px 2px rgba(0, 0, 0, .5);
+  --tb-focus-ring: 0 0 0 2px var(--tb-surface-panel), 0 0 0 4px var(--tb-accent-line);
+
+  // type
+  --tb-font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+  --tb-font-heading: var(--tb-font-display, Georgia), "Times New Roman", serif;
+  --tb-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  // motion
+  --tb-ease: cubic-bezier(.2, .7, .3, 1);
+  --tb-fast: 120ms;
+  --tb-slow: 240ms;
+
+  // layers: the map's own canvases stay below 20
+  --tb-z-float: 20;
+  --tb-z-toast: 40;
+  --tb-z-dock: 1050;
+  --tb-z-drawer: 1060;
+
+  // sizes
+  --tb-hit: 32px;                                                                                                       // smallest press target with a mouse
+  --tb-hit-touch: 44px;                                                                                                 // …and with a finger
+  --tb-side-width: 360px;
+}

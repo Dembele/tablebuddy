@@ -1,0 +1,57 @@
+services:
+  # ============================================
+  # TABLEBUDDY:backend
+  #  - localhost:$BACKEND_PORT (shared.env; REST + socket.io on the same port)
+  # ============================================
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    image: tablebuddy-backend
+    container_name: tablebuddy-backend
+    network_mode: "host"
+    user: "999"
+    env_file:
+      - /srv/tablebuddy/shared.env
+      - /srv/tablebuddy/apps/backend/.env.local
+    volumes:
+      - /srv/tablebuddy/apps/backend:/app
+      - /srv/tablebuddy/packages:/app/deps:ro
+    environment:
+      - HOME=/var/cache/tablebuddy
+      - NODE_ENV=production                                   # overrides shared.env here
+    working_dir: /app
+    restart: unless-stopped
+    # production: compiled once on start (tsc → dist/), no file watching — a code change needs `docker compose restart backend`
+    command: sh -c "npm i --dd --include=dev && npm start"
+    # local dev with nodemon: drop NODE_ENV above and use
+    # command: sh -c "npm i --dd && npm run dev"
+
+  # ============================================
+  # TABLEBUDDY:frontend
+  #  - localhost:4001
+  #  - mounted at the host paths: apps/frontend/deps is a symlink to ../../packages and Turbopack only reads files
+  #    inside its root (next.config.ts: repo root), so the link must resolve there — /app + a mount over deps can't
+  # ============================================
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    image: tablebuddy-frontend
+    container_name: tablebuddy-frontend
+    network_mode: "host"
+    user: "999"
+    env_file:
+      - /srv/tablebuddy/shared.env
+    volumes:
+      - /srv/tablebuddy/apps/frontend:/srv/tablebuddy/apps/frontend
+      - /srv/tablebuddy/packages:/srv/tablebuddy/packages:ro
+    environment:
+      - HOME=/var/cache/tablebuddy
+      - NODE_ENV=production                                   # overrides shared.env here: optimized build, Secure session cookie
+    working_dir: /srv/tablebuddy/apps/frontend
+    restart: unless-stopped
+    # production (internet-facing): code changes need `docker compose restart frontend` to rebuild — no HMR
+    command: sh -c "npm i --dd --include=dev && npm run build && npm run start"
+    # local dev with HMR: drop NODE_ENV above and use
+    # command: sh -c "npm i --dd && npm run dev"

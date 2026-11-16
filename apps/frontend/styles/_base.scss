@@ -1,0 +1,151 @@
+//Base layer (docs/design-guide.md §3–4): page background, type, links, focus, scrollbars, and bootstrap parts retuned to the tokens
+//so pages written with plain bootstrap classes already follow the guide.
+
+body {
+  background-color: var(--tb-surface-page);
+  font-family: var(--tb-font-body);
+  font-variant-numeric: tabular-nums;                                                                                   // sheets are numbers: columns must not jitter
+}
+
+// the tavern art stays as atmosphere; the scrim keeps text placed straight on the page readable
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 30%, rgba($tb-oak-950, .78), rgba($tb-oak-950, .93));
+  pointer-events: none;
+}
+
+h1, h2, h3, .h1, .h2, .h3, .navbar-brand, .card-header, .tb-title {
+  font-family: var(--tb-font-heading);
+  letter-spacing: .01em;
+}
+
+a {
+  text-underline-offset: .18em;
+  text-decoration-thickness: 1px;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--tb-focus-ring);                                                                                     // follows the element's own radius
+}
+
+::selection {
+  background: var(--tb-accent-line);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tb-border-strong) transparent;
+}
+
+// ── bootstrap, retuned ──────────────────────────────────────────────────────────────────────────────────────────────
+
+// every page says `card bg-dark`: that is the panel surface
+.bg-dark {
+  background-color: var(--tb-surface-float) !important;
+}
+
+.card {
+  --bs-card-border-color: var(--tb-border);
+  --bs-card-cap-bg: #{rgba(#000, .2)};
+  --bs-card-cap-padding-y: .5rem;
+  box-shadow: var(--tb-shadow-1);
+}
+
+.card-header {
+  font-size: 1.0625rem;
+  border-bottom-color: var(--tb-border);
+}
+
+a.card {
+  transition: border-color var(--tb-fast) var(--tb-ease), transform var(--tb-fast) var(--tb-ease);
+
+  &:hover {
+    border-color: var(--tb-accent-line);
+    transform: translateY(-1px);
+  }
+}
+
+.list-group {
+  --bs-list-group-border-color: var(--tb-border);
+}
+
+.form-control, .form-select {
+  background-color: var(--tb-surface-sunken);
+  border-color: var(--tb-border-strong);
+
+  &:focus {
+    background-color: var(--tb-surface-sunken);
+    border-color: var(--tb-accent);
+    box-shadow: 0 0 0 3px var(--tb-accent-soft);
+  }
+}
+
+.form-label {
+  font-size: .875rem;
+  color: var(--tb-ink-muted);
+  margin-bottom: .25rem;
+}
+
+.btn {
+  --bs-btn-font-weight: 600;
+}
+
+// the brand colours are too dark to read as text on oak: the text utilities use the lighter inks
+.text-danger { color: var(--tb-danger) !important; }
+.text-success { color: var(--tb-success) !important; }
+.text-warning { color: var(--tb-warning) !important; }
+.text-info { color: var(--tb-info) !important; }
+
+.alert {
+  --bs-alert-padding-y: .625rem;
+  --bs-alert-padding-x: .875rem;
+  border-left-width: 3px;
+}
+
+.badge {
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+.nav-pills {
+  --bs-nav-pills-link-active-bg: var(--tb-accent-soft);
+  --bs-nav-pills-link-active-color: var(--tb-accent-bright);
+  --bs-nav-link-color: var(--tb-ink-muted);
+  --bs-nav-link-hover-color: var(--tb-ink);
+}
+
+.navbar .nav-link.active {
+  color: var(--tb-accent-bright);
+  box-shadow: inset 0 -2px 0 var(--tb-accent);
+}
+
+.dropdown-menu {
+  --bs-dropdown-bg: var(--tb-surface-raised);
+  --bs-dropdown-border-color: var(--tb-border-strong);
+  box-shadow: var(--tb-shadow-2);
+}
+
+.description {
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  line-height: 1.6;
+  max-width: 72ch;                                                                                                      // rules text reads as a column, not a banner
+}
+
+// a site page inside the game room's drawer (BootstrapClient marks the frame): use the whole width, less air on top
+html.embedded {
+  .container { max-width: none; }
+  main { padding-top: .75rem !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

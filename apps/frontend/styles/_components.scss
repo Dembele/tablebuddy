@@ -1,0 +1,403 @@
+//Shared components (docs/design-guide.md §5): the pieces bootstrap has no class for. Prefix tb-, states as .is-*,
+//variants as --modifier. Everything reads the tokens; nothing here knows about a page.
+
+// icon-only button: toolbars, row actions. Always give it title + aria-label.
+.tb-icon-btn {
+  --size: var(--tb-hit);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--tb-radius);
+  background: transparent;
+  color: var(--tb-ink-muted);
+  font-size: calc(var(--size) * .5);
+  line-height: 1;
+  transition: background-color var(--tb-fast) var(--tb-ease), color var(--tb-fast) var(--tb-ease), border-color var(--tb-fast) var(--tb-ease);
+
+  &:hover:not(:disabled) {
+    background: var(--tb-surface-raised);
+    color: var(--tb-ink);
+  }
+
+  &.is-active {
+    background: var(--tb-accent-soft);
+    border-color: var(--tb-accent-line);
+    color: var(--tb-accent-bright);
+  }
+
+  &:disabled {
+    opacity: .4;
+  }
+
+  &--sm { --size: 26px; }
+  &--lg { --size: 40px; }
+
+  &--danger:hover:not(:disabled) {
+    background: var(--tb-danger-soft);
+    color: var(--tb-danger);
+  }
+
+  // on top of the map: needs its own surface
+  &--solid {
+    background: var(--tb-surface-float);
+    border-color: var(--tb-border);
+    box-shadow: var(--tb-shadow-1);
+    color: var(--tb-ink);
+  }
+}
+
+// buttons that belong together (tool switch); one may be .is-active
+.tb-group {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: calc(var(--tb-radius) + 2px);
+  background: var(--tb-surface-sunken);
+}
+
+// round portrait or its placeholder letters
+.tb-avatar {
+  --size: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--tb-surface-raised);
+  box-shadow: 0 0 0 1px var(--tb-border-strong);
+  color: var(--tb-ink-muted);
+  font-size: calc(var(--size) * .4);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+
+  &--dm { box-shadow: 0 0 0 2px var(--tb-role-dm); }
+  &--player { box-shadow: 0 0 0 2px var(--tb-role-player); }
+}
+
+// small fact in a pill: a cost, a slot count, a tag
+.tb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-surface-raised);
+  color: var(--tb-ink-muted);
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+
+  &--accent { border-color: var(--tb-accent-line); background: var(--tb-accent-soft); color: var(--tb-accent-bright); }
+  &--success { border-color: transparent; background: var(--tb-success-soft); color: var(--tb-success); }
+  &--danger { border-color: transparent; background: var(--tb-danger-soft); color: var(--tb-danger); }
+  &--warning { border-color: transparent; background: var(--tb-warning-soft); color: var(--tb-warning); }
+  &--info { border-color: transparent; background: var(--tb-info-soft); color: var(--tb-info); }
+  &.is-spent { opacity: .5; text-decoration: line-through; }
+}
+
+// the small caps line above a group of things
+.tb-eyebrow {
+  color: var(--tb-ink-faint);
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+// thin bar: hit points
+.tb-meter {
+  height: 4px;
+  border-radius: var(--tb-radius-pill);
+  background: rgba(255, 255, 255, .08);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--tb-hp-good);
+    transition: width var(--tb-slow) var(--tb-ease);
+  }
+
+  &.is-hurt > span { background: var(--tb-hp-hurt); }
+  &.is-critical > span { background: var(--tb-hp-critical); }
+}
+
+// one line of a dense list: portrait, text, actions on the right
+.tb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--tb-radius);
+
+  &:hover { background: var(--tb-surface-raised); }
+  &.is-active { border-color: var(--tb-accent-line); background: var(--tb-accent-soft); }
+  &__main { flex: 1; min-width: 0; }
+  &__title { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+  &__sub { color: var(--tb-ink-muted); font-size: .75rem; }
+}
+
+// nothing here yet — say what would be here and how to get it
+.tb-empty {
+  padding: 24px 12px;
+  color: var(--tb-ink-faint);
+  font-size: .875rem;
+  text-align: center;
+}
+
+// segmented switch between views of one panel
+.tb-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: calc(var(--tb-radius) + 2px);
+  background: var(--tb-surface-sunken);
+
+  > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    min-height: var(--tb-hit);
+    padding: 0 8px;
+    border: 0;
+    border-radius: var(--tb-radius);
+    background: transparent;
+    color: var(--tb-ink-muted);
+    font-weight: 600;
+    transition: background-color var(--tb-fast) var(--tb-ease), color var(--tb-fast) var(--tb-ease);
+
+    &:hover { color: var(--tb-ink); }
+    &.is-active { background: var(--tb-surface-raised); box-shadow: var(--tb-shadow-1); color: var(--tb-accent-bright); }
+  }
+}
+
+// a count that wants attention (pending requests)
+.tb-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-accent);
+  color: var(--tb-ink-on-accent);
+  font-size: .6875rem;
+  font-weight: 800;
+}
+
+// panel that floats over other content (over the map, over a page)
+.tb-float {
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-lg);
+  background: var(--tb-surface-float);
+  box-shadow: var(--tb-shadow-2);
+  backdrop-filter: blur(6px);
+}
+
+// a passing notice; --danger for failures
+.tb-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--tb-border-strong);
+  border-left: 3px solid var(--tb-warning);
+  border-radius: var(--tb-radius);
+  background: var(--tb-surface-raised);
+  box-shadow: var(--tb-shadow-2);
+  font-size: .875rem;
+}
+
+// label over a big number: AC, hit points, a modifier
+.tb-stat {
+  min-width: 84px;
+  padding: 6px 10px;
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius);
+  background: var(--tb-surface-sunken);
+  text-align: center;
+
+  &__label { color: var(--tb-ink-muted); font-size: .75rem; }
+  &__value { font-family: var(--tb-font-heading); font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+}
+
+// connection lamp
+.tb-dot {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tb-danger);
+
+  &.is-on { background: var(--tb-success); box-shadow: 0 0 6px var(--tb-success); }
+}
+
+// a press that asks the DM (check, save): label left, bonus right
+.tb-ask {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  min-height: 28px;
+  padding: 2px 8px;
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius);
+  background: var(--tb-surface-sunken);
+  color: var(--tb-ink);
+  font-size: .8125rem;
+  text-align: left;
+  transition: border-color var(--tb-fast) var(--tb-ease), background-color var(--tb-fast) var(--tb-ease);
+
+  &:hover:not(:disabled) { border-color: var(--tb-accent-line); background: var(--tb-accent-soft); }
+  &:disabled { opacity: .5; }
+  &.is-proficient { color: var(--tb-accent-bright); }
+  b { font-variant-numeric: tabular-nums; }
+}
+
+// collapsible group inside a panel
+.tb-section {
+  > summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    &::before {
+      content: "▸";
+      color: var(--tb-ink-faint);
+      font-size: .75rem;
+      transition: transform var(--tb-fast) var(--tb-ease);
+    }
+  }
+
+  &[open] > summary::before { transform: rotate(90deg); }
+}
+
+// collapsible card (<Fold>): header = switch, a digest of the contents on the right while closed
+.tb-fold {
+  > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    &::before {
+      content: "▸";
+      color: var(--tb-ink-faint);
+      font-family: var(--tb-font-body);
+      font-size: .75rem;
+      transition: transform var(--tb-fast) var(--tb-ease);
+    }
+
+    &:hover::before { color: var(--tb-accent-bright); }
+  }
+
+  &[open] > summary::before { transform: rotate(90deg); }
+  &[open] > summary .tb-fold__digest { display: none; }
+
+  &:not([open]) > summary {
+    border-bottom: 0;
+    border-radius: inherit;
+  }
+
+  &__digest {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--tb-ink-muted);
+    font-family: var(--tb-font-body);
+    font-size: .8125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// label left, control right, on one line: formulas and other long lists of single fields
+.tb-kv {
+  display: grid;
+  grid-template-columns: minmax(96px, 34%) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--tb-ink-muted);
+  font-size: .8125rem;
+}
+
+// rows of bare inputs under one header line (inventory, spells): columns come from --cols
+.tb-grid-rows {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  gap: 4px 8px;
+
+  > .tb-eyebrow { padding-bottom: 2px; }
+}
+
+// a number input that should not stretch: counts, slots, dice
+.tb-num-field {
+  flex: none;
+  width: 64px;
+
+  &--mid { width: 88px; }
+  &--wide { width: 200px; }
+}
+
+// page title bar that stays in view while a long form scrolls
+.tb-sticky-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -8px 12px;
+  padding: 8px;
+  border-bottom: 1px solid var(--tb-border);
+  border-radius: 0 0 var(--tb-radius) var(--tb-radius);
+  background: var(--tb-surface-panel);
+}
+
+// map form preview: the pan / zoom viewport in the picture's own proportions, clipped to its frame
+.map-preview {
+  display: flex;
+  width: 100%;
+  max-height: 80vh;
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius);
+  background: var(--tb-surface-stage);
+  overflow: hidden;
+
+  img { max-width: none; }
+}

@@ -1,0 +1,5 @@
+Required Notice: Copyright (c) 2026 Dmitry (https://github.com/Dembele). All rights reserved except as granted by LICENSE.md (PolyForm Shield License 1.0.0).
+
+Licensor Line of Business: TableBuddy, virtual tabletop software for tabletop roleplaying games, provided as self-hosted, hosted (web), desktop and mobile applications.
+
+This repository contains no rulebook content. Books installed under packages/data/ (other than the stub book shipped here) are not part of TableBuddy and are not covered by its license; see README.md, "Game content".

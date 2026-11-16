@@ -1,0 +1,50 @@
+{
+  "display": "Frontend",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "incremental": false,
+    "paths": {
+      "@frontend/*": [
+        "./*"
+      ]
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": [
+      "node"
+    ],
+    "allowJs": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "deps/data/stub"
+  ]
+}

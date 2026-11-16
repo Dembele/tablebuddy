@@ -1,0 +1,7 @@
+//empty tsconfig so IDE stop complaining about rootDir
+// + new functions like array.pad =>ES2022
+{
+  "compilerOptions": {
+    "target": "ES2022"
+  }
+}
